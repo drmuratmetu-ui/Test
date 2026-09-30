@@ -1,0 +1,28 @@
+Experiment 1 done in 111.8 s
+Experiment 2 done in 111.3 s
+
+Sum rate vs SNR  (M = 64, K = 16, 200 realizations) [bit/s/Hz]
+ SNR(dB)      MRC     MMSE    WMMSE WMMSE-MMSE
+     -10     7.24     7.37     7.45       0.08
+      -5    15.68    17.13    17.19       0.06
+       0    25.91    33.35    33.44       0.09
+       5    33.34    54.85    55.00       0.14
+      10    36.88    79.58    79.77       0.19
+      15    38.41   105.46   105.66       0.19
+      20    38.56   131.74   131.86       0.12
+      25    38.91   158.27   158.28       0.00
+      30    38.90   184.78   184.78       0.00
+
+Sum rate vs M  (K = 16, SNR = 10 dB) [bit/s/Hz]
+       M      MRC     MMSE    WMMSE WMMSE-MMSE
+      16    15.86    30.94    35.41       4.46
+      24    20.91    46.37    47.51       1.14
+      32    25.10    57.11    57.52       0.41
+      48    31.85    70.85    71.11       0.26
+      64    36.87    79.53    79.71       0.18
+      96    44.91    90.90    91.01       0.12
+     128    50.41    98.45    98.53       0.08
+
+WMMSE convergence (M = K = 16, SNR = 10 dB): MRC 16.22, MMSE 31.79, WMMSE 35.31 (from MMSE, 29 it), 35.76 (from MRC, 34 it)
+
+Saved massive_mimo_results.png and massive_mimo_results.mat

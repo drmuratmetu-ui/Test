@@ -26,19 +26,31 @@ for it = 1:maxIter
     w = 1 ./ e;
     % (3) Precoder: V = (H^H D H + mu I)^-1 H^H diag(w.*u), D = diag(w|u|^2).
     %     Push-through identity keeps it K x K: V = H^H (D G + mu I)^-1 diag(w.*u)
-    DG = diag(w .* abs(u).^2) * G;
-    C  = diag(w .* u);
-    X  = DG \ C;
-    if txpower(X, G) > P               % bisection on the Lagrange multiplier mu
+    %     Symmetric form, well conditioned even when WMMSE switches weak users
+    %     off (u_k -> 0):  (D G + mu I)^-1 C = S (S G S + mu I)^-1 B,
+    %     with S = D^(1/2) and B = D^(-1/2) C = diag(sqrt(w_k) u_k/|u_k|).
+    %     Users with u_k = 0 exactly get zero power.
+    on = abs(u) > 0;
+    Ga = G(on, on);
+    s  = sqrt(w(on)) .* abs(u(on));
+    A0 = (s * s.') .* Ga;
+    B  = diag(sqrt(w(on)) .* u(on) ./ abs(u(on)));
+    I  = eye(nnz(on));
+    Xmu = @(mu) diag(s) * ((A0 + mu * I) \ B);
+    if rcond(A0) > 1e-10 && txpower(Xmu(0), Ga) <= P
+        Xa = Xmu(0);                   % power constraint inactive
+    else                               % bisection on the Lagrange multiplier mu
         lo = 0; hi = 1;
-        while txpower((DG + hi * eye(K)) \ C, G) > P, hi = 2 * hi; end
+        while txpower(Xmu(hi), Ga) > P, hi = 2 * hi; end
         for b = 1:60
             mid = (lo + hi) / 2;
-            if txpower((DG + mid * eye(K)) \ C, G) > P, lo = mid; else, hi = mid; end
+            if txpower(Xmu(mid), Ga) > P, lo = mid; else, hi = mid; end
             if hi - lo < 1e-12 * hi, break; end
         end
-        X = (DG + hi * eye(K)) \ C;
+        Xa = Xmu(hi);
     end
+    X = zeros(K, K);
+    X(on, on) = Xa;
     V = H' * X;
 
     hist(it + 1) = sum_rate(H, V, sigma2);

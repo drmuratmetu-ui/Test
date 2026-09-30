@@ -11,6 +11,7 @@
 
 clear; close all; clc;
 rng(1);
+if exist('OCTAVE_VERSION', 'builtin'), warning('off', 'Octave:gnuplot-graphics'); end
 
 %% Parameters
 K        = 16;                  % users
