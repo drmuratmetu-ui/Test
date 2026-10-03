@@ -103,8 +103,8 @@ ylim([1e-6 1]); xlim([SNRdB(1) SNRdB(end)]);
 xlabel('SNR (dB)'); ylabel('Bit error rate');
 title(sprintf('Uncoded QPSK BER  (M = %d, K = %d)', M, K));
 legend(h, names, 'location', 'southwest');
-text(SNRdB(end) - 0.5, 4e-1, {'lines: Q(\surd SINR)', 'markers: Monte Carlo'}, ...
-     'horizontalalignment', 'right', 'fontsize', 9);
+text(SNRdB(end) - 0.5, 4e-1, 'lines: Q(sqrt(SINR))', 'horizontalalignment', 'right', 'fontsize', 9);
+text(SNRdB(end) - 0.5, 2e-1, 'markers: Monte Carlo', 'horizontalalignment', 'right', 'fontsize', 9);
 
 print(fig, 'ber_vs_snr.png', '-dpng', '-r110');
 save('-v7', 'ber_vs_snr.mat', 'SNRdB', 'ber_an', 'ber_mc', 'err_mc', 'nBits', 'nOff', 'M', 'K', 'nReal', 'nSym');
